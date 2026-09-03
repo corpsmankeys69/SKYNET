@@ -4,7 +4,7 @@ This repo carries all four pieces of [jaredrhod/fullstack-agent](https://github.
 
 ## What's here
 
-- **`CLAUDE.md`** (repo root) — the boot config. Identity: Jarvis, kept as shipped (unmodified personality, "sir/boss" address, welcome line "All systems online, sir. What are we working on today?"). Also carries the barehands board block (4b from `barehands.md`) at the bottom, so Jarvis knows to reach for the board when you ask to see something.
+- **`CLAUDE.md`** (repo root) — the boot config. Identity: renamed from the shipped Jarvis to **Bentley** (personality/rules otherwise unchanged: "sir/boss" address, welcome line "All systems online, sir. What are we working on today?"). Also carries the barehands board block (4b from `barehands.md`) at the bottom, so the agent knows to reach for the board when you ask to see something.
 - **`vault/`** — the memory vault. `VAULT-INDEX.md` is filled in where this session had real answers (name: Bentley, vault location, folder structure) and left with `[FILL IN: ...]` markers everywhere the template's own design calls for a real interview (Background, How I Think, Beliefs, Preferences details, etc.) — those are opt-in by design, not an oversight.
 - **`backtalk/backtalk.json`** — voice config: hands-free listening (`mic_mode: "open"`, home key still works as interrupt), built-in Kokoro voice (`bm_lewis`, British butler register), permissions set to ask-first (`permission_mode: "ask"`), `extra_dirs` pointed at `vault/`, `barehands_state_dir` pointed at `../barehands/state` so the voice drives the hands' ring too.
 - **`ai-visualizer/ai-visualizer.json`** — face config: the board face, `bus_dir` pointed at `../backtalk` so it reads the voice's live state.

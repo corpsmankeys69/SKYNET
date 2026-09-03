@@ -21,12 +21,7 @@ This vault lives at `./vault`, alongside CLAUDE.md at the repo root. If you use 
 
 ## Who I Am
 
-I'm Bentley. [FILL IN: whatever else you want the AI to have — what you do, where you're based if you care to share it. First person, conversational, concise. Nothing here is required; share what's useful, skip what's not.]
-
-## Key People
-
-[FILL IN: one line per important person in your work and life — partners, team, family, mentors:]
-- **[[Name]]** — [FILL IN: who they are and their role to you]
+I'm Bentley.
 
 ## Vault Structure
 

@@ -1,0 +1,12 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      { "hooks": [ { "type": "command",
+          "command": "printf thinking > barehands/state/state" } ] }
+    ],
+    "Stop": [
+      { "hooks": [ { "type": "command",
+          "command": "printf idle > barehands/state/state" } ] }
+    ]
+  }
+}

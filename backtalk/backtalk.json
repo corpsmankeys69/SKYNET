@@ -6,5 +6,6 @@
   "stt_model": "small.en",
   "mic_mode": "open",
   "permission_mode": "ask",
-  "extra_dirs": ["vault"]
+  "extra_dirs": ["vault"],
+  "barehands_state_dir": "../barehands/state"
 }

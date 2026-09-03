@@ -1,0 +1,8 @@
+{
+  "name": "Jarvis",
+  "port": 8794,
+  "orbs": [
+    { "title": "Vault", "path": "../vault", "kind": "notes" },
+    { "title": "Props", "path": "media", "kind": "media" }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Jarvis",
+  "badge": "",
+  "face": "board",
+  "port": 8790,
+  "bus_dir": "../backtalk",
+  "thinking_sound": true
+}

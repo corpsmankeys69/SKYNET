@@ -6,6 +6,5 @@
   "stt_model": "small.en",
   "mic_mode": "open",
   "permission_mode": "ask",
-  "extra_dirs": ["vault"],
-  "thinking_sound": true
+  "extra_dirs": ["vault"]
 }

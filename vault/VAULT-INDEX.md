@@ -7,10 +7,6 @@ type: index
 
 Read this file at the start of every conversation. It has two jobs: **the profile of the person you work for** (who I am, how I think, how to work with me) and **the map of this vault** (the structure, the indexes, and the rules for maintaining it). Your own identity is not here — that lives in the boot file (CLAUDE.md), which survives compaction.
 
-(This is a starter template. Every spot that needs your information is marked **[FILL IN: ...]**. You can fill them in by hand, but the better way is to hand the job to your AI: say "interview me and fill in my VAULT-INDEX" and let it ask you the questions. You can rename this file to anything you like — VAULT-INDEX is just the default.)
-
-(**AI:** if you are reading this file and any [FILL IN: ...] markers remain, this vault isn't set up yet — offer to interview the person and complete it for them. Then ask about one topic at a time, conversationally. Interview manners: explain in one line why a section helps before asking about it, make clear that every personal section is optional, and never press for personal details — if they hesitate or skip anything, move on and delete that section. Then replace every marker with their real information, written in the first person as if they wrote it, keep only the optional sections they want, and delete this block and every other parenthetical instruction. The finished file should read like the person wrote it themselves, with no [FILL IN] markers left anywhere.)
-
 ---
 
 ## Vault location
@@ -33,34 +29,11 @@ I'm Bentley.
 04 - Resources      ← Cross-project reference material, templates, Jobs
 ```
 
-[FILL IN: as you add projects, insert numbered folders between Daily Notes and Personal, and add one line per folder here.]
+(As you add project folders, insert them numbered between Daily Notes and Personal, and add one line per folder here.)
 
 ## What's Active Right Now
 
 All open work lives in one note: [[Active Priorities]]. Tag each item with its project where it isn't obvious. Check it at the start of every conversation; verify an item's real state before acting on it (a listed item may already be done).
-
-(Optional sections — these get personal, and they're entirely opt-in. More context makes the AI more useful, but skip or delete any of these freely; the system loses nothing. The Preferences section after them is worth keeping for everyone.)
-
-## Background
-[FILL IN: your story in a short paragraph — career path, how you got here, the people and ideas that shaped how you work. This is what lets the AI understand WHY you decide things the way you do.]
-
-## How I Think
-[FILL IN: bullets, first person.]
-
-## Health
-[FILL IN: only what you want the AI to factor in — routines, goals, constraints. Or delete this section.]
-
-## Personal Interests
-[FILL IN: bullets, first person.]
-
-## Beliefs
-[FILL IN: bullets, first person — only if you want the AI to know. Or delete this section.]
-
-## Daily Routine
-[FILL IN: bullets, first person.]
-
-## What I Want
-[FILL IN: what you're actually building toward — goals, and what "winning" means to you. The AI can only weigh tradeoffs the way you would if it knows this.]
 
 ## My Preferences for Working with AI
 
@@ -128,7 +101,7 @@ When creating or editing a note, add `wikilinks`:
 - `00 - Inbox/*` → infer from content, else `personal`
 - Root-level files → `meta`
 
-[FILL IN: as you add project folders, add one mapping line per folder here — slugs are lowercase and hyphenated.]
+(As you add project folders, add one mapping line per folder here — slugs are lowercase and hyphenated.)
 
 **type** — What KIND of document it is (not its topic):
 - `index` — a folder index / map-of-content note (or this root index)
@@ -140,7 +113,7 @@ When creating or editing a note, add `wikilinks`:
 ### Valid Field Values
 
 **status:** `active` | `completed` | `parked` | `idea` | `archived`
-**project:** [FILL IN: your project slugs as you add them] | `personal` | `meta`
+**project:** (your project slugs, added as you create them) | `personal` | `meta`
 **type:** `index` | `reference` | `guide` | `plan` | `log`
 
 ### Folder Indexes (keep them in sync)
@@ -166,7 +139,6 @@ When I say something is done or ask to archive a note: (1) set its frontmatter `
 
 Rules the AI always follows when it writes for me. One worth stealing for everyone: **no em-dashes in marketing or published copy you draft for me** (sales pages, emails, posts) — em-dashes are a strong "an AI wrote this" tell and quietly cost you trust with sharp audiences. Hyphens in normal compound words ("30-day," "well-known") are fine.
 
-- [FILL IN: your own tone, formatting, and word rules. Delete this line if the em-dash rule is all you need.]
 
 ### Daily Notes
 

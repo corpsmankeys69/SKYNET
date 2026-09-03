@@ -92,7 +92,7 @@ The rules above are the engine. This section is where the system stops being gen
 - Writing rules for anything it drafts for you — a specific voice, or words and punctuation to avoid.
 - Any non-negotiable you've learned you need.
 
-[FILL IN: your own rules — start with even one, and grow this list as you learn what you need.]
+(Nothing added yet. Say the word any time and it goes here.)
 
 ## The barehands board
 

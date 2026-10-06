@@ -11,3 +11,9 @@ major edit. See `CLAUDE.md` §6 for the format contract.
   (`sources/`, `wiki/topics/`), and ran the first ingest against the
   pattern's own source document as a worked example. No contradictions
   found (empty wiki).
+
+## 2026-10-06 — Ingested Epic Training Quick Start Guide template (.dotx)
+- Source: sources/2026-10-06-epic-training-quick-start-guide-template.md (extraction) and sources/2026-10-06-epic-training-quick-start-guide-template.dotx (original binary)
+- Created: [[Epic Training Quick Start Guide Template]]
+- Updated: wiki/index.md (new "Documents and templates" area)
+- Notes: Extracted from the template XML: page setup, fonts, brand colors, header, footer gradient, callout box construction. No contradictions found (no related pages existed).

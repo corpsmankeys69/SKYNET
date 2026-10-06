@@ -9,5 +9,6 @@ repository, and `wiki/log.md` for the full change history.
 - [[LLM Wiki Pattern]] — the pattern this whole repo implements
 
 ## Areas
-_(empty — this wiki has just been set up. New areas will appear here as
-topics get ingested.)_
+
+### Documents and templates
+- [[Epic Training Quick Start Guide Template]] — fonts, colors, header, footer, and callout box spec for Quick Start Guides

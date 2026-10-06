@@ -11,4 +11,5 @@ repository, and `wiki/log.md` for the full change history.
 ## Areas
 
 ### Documents and templates
+- [[Quick Start Guide Conversion Rules]] — how old PDF guides are rebuilt on the template
 - [[Epic Training Quick Start Guide Template]] — fonts, colors, header, footer, and callout box spec for Quick Start Guides

@@ -16,7 +16,7 @@ A Word template (.dotx) for building Quick Start Guides: short, workflow-based h
 - Page 1 is the title block plus an automatic Table of Contents (levels 1 to 3, dot leaders, right tab at 9350). Content starts on page 2. Each main topic starts on a new page.
 
 ## Fonts
-- Body: Calibri Light, 11 pt, color 00000A (near-black), line spacing 1.2 ([Basic Paragraph] style).
+- Body paragraphs: Normal style, Calibri 11 pt, automatic (black) color, single spacing. Verified against the template's body paragraphs; the Calibri Light / 00000A run formatting appears only on empty paragraphs. (sources/2026-10-06-epic-training-quick-start-guide-template.md)
 - Headings and theme fonts: Calibri / Calibri Light. No other typeface is used.
 - Tip box text: Calibri Light, 11.5 pt, letter spacing +0.3 pt, via the Tip Text character style.
 - Hyperlinks: color 0563C1, underlined.
@@ -61,3 +61,6 @@ Boxes can sit inside numbered step lists. Steps use a numbered list, 12 pt.
 ## Open items
 - The template does not state a body font for table text other than callouts.
 - The version line has a hard-coded date and "INITIALS" placeholder; the process for updating it is not in the template.
+
+## Build rules
+See [[Quick Start Guide Conversion Rules]] for how old guides are rebuilt on this template.

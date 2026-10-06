@@ -16,7 +16,7 @@ A Word template (.dotx) for building Quick Start Guides: short, workflow-based h
 - Page 1 is the title block plus an automatic Table of Contents (levels 1 to 3, dot leaders, right tab at 9350). Content starts on page 2. Each main topic starts on a new page.
 
 ## Fonts
-- Body: Calibri Light, 11 pt, color 00A (00000A), line spacing 1.2 ([Basic Paragraph] style).
+- Body: Calibri Light, 11 pt, color 00000A (near-black), line spacing 1.2 ([Basic Paragraph] style).
 - Headings and theme fonts: Calibri / Calibri Light. No other typeface is used.
 - Tip box text: Calibri Light, 11.5 pt, letter spacing +0.3 pt, via the Tip Text character style.
 - Hyperlinks: color 0563C1, underlined.

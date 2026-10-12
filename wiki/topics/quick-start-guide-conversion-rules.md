@@ -21,6 +21,7 @@ Rules the user set for rebuilding old PDF guides on the [[Epic Training Quick St
 - Bold UI terms as the old guide did.
 - Old "Hint:" lines become callout boxes. Time-savers and shortcuts are Efficiency Tip boxes. Troubleshooting or key-step reinforcement are Important Note boxes. Each hint is placed right after its step.
 - Screenshots and icons become highlighted placeholders: `[Screenshot: ...]` on its own line after the step, `[icon]` inline. The user replaces them.
+- The word "Epic" is marked as a purple-shaded `[Epic]` placeholder (fill C3A6F0, Word has no purple highlight). In the first guide this covers the header brand line and one callout box; the user asked for it on 2026-10-12.
 - Edits: fix grammar and typos only. Never merge or drop steps. Report duplicates and oddities to the user.
 - Page references: not used in the first guide. Rule unanswered; ask when one appears.
 

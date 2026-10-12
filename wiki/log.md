@@ -23,3 +23,7 @@ major edit. See `CLAUDE.md` §6 for the format contract.
 - Created: [[Quick Start Guide Conversion Rules]]
 - Updated: [[Epic Training Quick Start Guide Template]] (body font corrected from Calibri Light to Calibri 11 pt; link to conversion rules), wiki/index.md
 - Notes: The earlier body-font claim was wrong. Added tools/build_guide.py so the build can be repeated in a fresh session. Built guide delivered as a .docx in chat, not stored in the repo. Old PDF footer said "UW Medicine | SCCA"; template says "Fred Hutch" and was kept.
+
+## 2026-10-12 — Marked every "Epic" in the first guide with a purple placeholder
+- Updated: [[Quick Start Guide Conversion Rules]]; deliverables/Epic_Training_Quick_Start_Guide_Outpatient_Clinician_Rooming_a_Patient.docx
+- Notes: Two occurrences found (header "Epic Training" and one callout box). Both now read "[Epic]" with purple shading. The header change departs from the template's fixed header text; revert by removing the brackets and shading.

@@ -27,3 +27,7 @@ major edit. See `CLAUDE.md` §6 for the format contract.
 ## 2026-10-12 — Marked every "Epic" in the first guide with a purple placeholder
 - Updated: [[Quick Start Guide Conversion Rules]]; deliverables/Epic_Training_Quick_Start_Guide_Outpatient_Clinician_Rooming_a_Patient.docx
 - Notes: Two occurrences found (header "Epic Training" and one callout box). Both now read "[Epic]" with purple shading. The header change departs from the template's fixed header text; revert by removing the brackets and shading.
+
+## 2026-10-12 — Removed the word "Epic" from the first guide
+- Updated: [[Quick Start Guide Conversion Rules]]; deliverables/Epic_Training_Quick_Start_Guide_Outpatient_Clinician_Rooming_a_Patient.docx
+- Notes: Supersedes the earlier "[Epic]" placeholder. Header and callout now hold a blank purple placeholder. Also removed the template name from document properties and two unused epic.com link relationships. The file name still contains "Epic".

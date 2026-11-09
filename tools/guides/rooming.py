@@ -1,0 +1,107 @@
+"""Guide config: Outpatient Clinician Rooming a Patient (from the v.3 02.01.2021 PDF)."""
+TITLE = 'Outpatient Clinician Rooming a Patient'
+HEADER_TITLE = 'Outpatient Clinician Rooming a Patient Quick Start Guide'   # header line 2
+APP_AUD = 'Ambulatory | RN/MA'                                              # header line 3
+LINKS = {}
+# kinds: h1 h2 h3 | p | step | bullet | shot | tip | note  (see build_guide.py docstring)
+CONTENT = [
+ ('h1', 'Outpatient Clinician Rooming a Patient Quick Start Guide'),
+
+ ('h2', 'Customize Your Schedule'),
+ ('step', 'After logging in, click on the **Schedule** tab to access the **Department Schedule**.'),
+ ('step', 'Click the drop-down arrow to the right of your name and click the push pin to the right of your **Department** name to see the **Calendar** view.'),
+ ('shot', '[[Screenshot: schedule drop-down with Dept field and My Schedule list]]'),
+ ('step', 'Select the drop-down arrow next to the **Department** name and left click to drop and drag your practitioner or resource (generic) schedule to your **My Schedule.**'),
+ ('shot', '[[Screenshot: My Schedule and Department entries highlighted in the schedule list]]'),
+ ('step', 'Highlight your name under **My Schedule** to see the appointments for today.'),
+
+ ('h2', 'Review Patient Information', 'pagebreak'),
+ ('step', 'Highlight an appointment on your **Schedule** to view additional patient information.'),
+ ('step', 'Review the **SnapShot** report on the **Report Pane** from the **Schedule**.'),
+ ('shot', '[[Screenshot: SnapShot report on the Report Pane]]'),
+ ('step', 'If this is a commonly used **Report**, you can create a button on the **Report Pane** toolbar, so you do not have to search for it every time.'),
+ ('step', 'Click the wrench on the **Report Pane** toolbar next to the **Search** field.'),
+ ('step', 'The **Add or Remove Buttons** from **Toolbar** window appears.'),
+ ('step', 'Click the **Add Current** button to pull in the current viewed **Report.**'),
+ ('tip', 'You can change the **Button Name** in this window to your preference.'),
+ ('step', 'Click **Accept**. The button is permanently added to your **Report Pane**.'),
+
+ ('h2', 'Rooming a Patient', 'pagebreak'),
+ ('h3', 'Document the Reason for Visit'),
+ ('step', 'Open the **Rooming** activity tab and select the **Reason for Visit** section.'),
+ ('shot', '[[Screenshot: Rooming activity tabs with Reason for Visit]]'),
+ ('step', 'Use the speed buttons to select the **Chief Complaint**.'),
+ ('note', "If you don't see a button for the patient's chief complaint, search for it in the **Chief Complaint** field. Enter the first few letters of the complaint and press **Enter**. A list of matching complaints appears. Double-click a complaint to select it."),
+ ('step', 'Click one of the common **Chief Complaint buttons**. Or, in the **Chief Complaint** field, enter the first few letters of the complaint and press **Enter**. In the list of matches that appear, double-click a reason to select.'),
+ ('shot', '[[Screenshot: Reason for Visit section with Chief Complaint buttons]]'),
+
+ ('h3', 'Document Vitals'),
+ ('step', 'Click the Vitals section to document the appropriate fields.'),
+ ('tip', 'A Pain Score can also be documented under the Vitals section.'),
+ ('step', 'To add another set of vitals for this visit, click **New Reading**. A new column with today\'s date and time appears.'),
+ ('shot', '[[Screenshot: Vitals section]]'),
+
+ ('h3', "Review and Update the Patient's Allergies"),
+ ('step', 'Click the **Allergies** section.'),
+ ('shot', '[[Screenshot: Allergies section]]'),
+ ('step', 'To indicate that the patient does not have any allergies, select the **No Known Allergies** check box and click **Mark as Reviewed**.'),
+ ('step', "To indicate that you were unable to assess the patient's allergies, click **Unable to Assess**, then enter a reason."),
+ ('step', 'To add an allergy:'),
+ ('bullet', 'Enter the first few letters of the allergy in the [[icon]] **Add** field and press **Enter**. A list of matching allergens appears.'),
+ ('bullet', "Double-click the appropriate allergy and enter information like the type of allergy and the patient's reaction."),
+ ('bullet', 'Click [[icon]] Accept.'),
+ ('step', 'To update an allergy, click the name of an allergen and edit the information, as necessary.'),
+ ('step', 'If an allergy was entered in error, click [[icon]] **Delete** and enter a reason for deletion.'),
+ ('step', 'When you are done updating allergies, click [[icon]] **Mark as Reviewed**.'),
+ ('note', "Marking a section of the patient's chart as reviewed is similar to initialing the paper chart. The chart is updated to indicate that you last reviewed the information, and the date and time appear."),
+
+ ('h3', "Update a Patient's Current Medications"),
+ ('step', 'Click the Med Review section.'),
+ ('shot', '[[Screenshot: Med Review section]]'),
+ ('step', 'Select or clear the Taking? check box to indicate whether the patient is currently taking a medication.'),
+ ('step', 'To flag a medication for removal that the patient is no longer taking, hover your mouse over the medication and click the [[icon: red X]] that appears on the right.'),
+ ('shot', '[[Screenshot: Med Review section with the red X on a medication]]'),
+ ('step', 'The **Remove Order** window opens. Confirm the **Flag for removal** button is highlighted and click **Accept**.'),
+
+ ('h3', 'Add a Patient-Reported Medication'),
+ ('step', "In the **Med Review** section, click in the **Add Medication** search field, enter part of the medication's name and press **Enter**. A list of matching medications appears."),
+ ('step', 'Double-click the appropriate medication.'),
+ ('step', "Enter information about the medication, such as the dose, when the patient started taking it, and the frequency. Click **Accept**."),
+ ('step', "When you have finished reviewing and updating the patient's medications, click [[icon]] Mark as Reviewed."),
+
+ ('h3', "Verify the Patient's Pharmacy"),
+ ('step', 'Ask the patient if the pharmacy listed in the **Med Review** section is correct.'),
+ ('step', 'To change the pharmacy, click the **pharmacy name**.'),
+ ('note', 'If the patient does not have a pharmacy, click **No pharmacy Selected** button.'),
+ ('step', "Choose one of the suggested pharmacies or search for the patient’s preferred pharmacy and click **Accept**."),
+
+ ('h3', 'Reconcile Outside Medication Info'),
+ ('p', "When another organization has a medication on file for the patient, a banner appears at the top of the **Med Review** section. This data can come from other organizations that see the patient or from an outside pharmacy."),
+ ('step', 'In the **Med Review** section, click **Go Reconcile** [[icon]] in the banner that indicates medications from outside sources are available.'),
+ ('shot', '[[Screenshot: New medications from outside sources banner with Go Reconcile]]'),
+ ('step', 'Review the information that appears in the **Reconcile Outside Info** activity.'),
+ ('step', 'Click [[icon: green plus]] for any medications the patient confirms that they are taking. The **Medication Details** window opens.'),
+ ('step', 'Enter information about the medication ([[icon: red !]] means that an item is required) and click **Accept**.'),
+ ('note', '[[icon: ?]] appears next to medications that do not have an exact match in ((blank)). For example, a patient might report a brand name medication but not its strength. When you click [[icon: green plus]], you must enter a matching medication in the **Medication Details** window.'),
+ ('step', 'Click [[icon: trash can]] for any medications that the patient denies taking.'),
+ ('step', "When you are finished, click [[icon]] **Accept** to add the reconciled medications to the patient's medication list."),
+
+ ('h3', "Document Patient’s Medical, Surgical, Family and Social History"),
+ ('step', 'Click on the **History** section.'),
+ ('shot', '[[Screenshot: History section, General Medical History]]'),
+ ('step', 'Update the items as needed.'),
+ ('tip', 'You can use the paper icon to add additional comments.'),
+ ('step', 'Use the **green plus sign next to Add** to search for and add items that are not already listed.'),
+ ('step', 'Indicate that you have reviewed and updated the history for the patient by clicking **Mark as Reviewed**.'),
+ ('step', 'Repeat the steps above and document **Surgical history** as appropriate.'),
+
+ ('h3', 'Exploring Family History'),
+ ('step', 'Scroll down to the **Family History** and document information provided by the patient.'),
+ ('shot', '[[Screenshot: Family History grid]]'),
+ ('step', 'To update the living status of a family member, left click in the **Status** field to make changes.'),
+ ('step', 'Click **Mark as Reviewed**.'),
+
+ ('h3', 'Exploring Substance and Sexual Activity History'),
+ ('step', 'Review and document the **Substance** and **Sexual Activity** history as needed.'),
+ ('step', 'Click **Mark as Reviewed**.'),
+]

@@ -1,135 +1,51 @@
-"""Build a Quick Start Guide .docx from the Epic Training template XML.
+"""Build a guide .docx from the Epic Training Quick Start Guide template XML.
 
-Usage: python3 -I build_guide.py <template_unzipped_dir> <out_docx> <pages.json or none>
-Content is defined in CONTENT below; page numbers for the TOC come from pages.json (pass 2).
+Usage: python3 -I build_guide.py <template_unzipped_dir> <out_docx> <config.py> [pages.json]
+
+Config (see guides/*.py) defines TITLE, HEADER_TITLE, APP_AUD, LINKS {rId: url}, CONTENT.
+Content kinds:
+  h1 h2 h3        headings (add 'pagebreak' as third item to start a main topic on a new page)
+  p               plain paragraph (Normal style)
+  step / bullet   numbered step (restarts per list) / level-2 bullet under a step
+  bullet0         standalone bullet list item (not under a step)
+  shot / shot0    highlighted [Screenshot: ...] placeholder, indented under a step / flush left
+  tip / note      Efficiency Tip box / Important Note box (cloned from the template, icons kept)
+Inline markup: **bold**, [[hand-added marker]] (yellow), ((blank)) (purple blank placeholder),
+               {{link:rId|text}} (hyperlink using LINKS[rId]).
+Page numbers for the TOC come from pages.json (see run_guide.sh).
 """
 import json, os, re, shutil, sys, zipfile, random
 
-SRC, OUT, PAGES = sys.argv[1], sys.argv[2], (sys.argv[3] if len(sys.argv) > 3 else 'none')
+SRC, OUT, CONFIG = sys.argv[1], sys.argv[2], sys.argv[3]
+PAGES = sys.argv[4] if len(sys.argv) > 4 else 'none'
 pages = json.load(open(PAGES)) if PAGES != 'none' and os.path.exists(PAGES) else {}
+cfg = {}
+exec(open(CONFIG, encoding='utf8').read(), cfg)
+TITLE, HEADER_TITLE, APP_AUD, LINKS, CONTENT = (cfg[k] for k in ('TITLE', 'HEADER_TITLE', 'APP_AUD', 'LINKS', 'CONTENT'))
 
-TITLE = 'Outpatient Clinician Rooming a Patient'
-APP_AUD = 'Ambulatory | RN/MA'
-
-# ---------------------------------------------------------------- content
-# kinds: h1 h2 h3 | p (plain paragraph) | step (numbered) | bullet | shot (placeholder)
-#        tip (efficiency box) | note (important box)
-# Inline markup: **bold**, [[placeholder]] (highlighted marker for items added by hand)
-CONTENT = [
- ('h1', 'Outpatient Clinician Rooming a Patient Quick Start Guide'),
-
- ('h2', 'Customize Your Schedule'),
- ('step', 'After logging in, click on the **Schedule** tab to access the **Department Schedule**.'),
- ('step', 'Click the drop-down arrow to the right of your name and click the push pin to the right of your **Department** name to see the **Calendar** view.'),
- ('shot', '[[Screenshot: schedule drop-down with Dept field and My Schedule list]]'),
- ('step', 'Select the drop-down arrow next to the **Department** name and left click to drop and drag your practitioner or resource (generic) schedule to your **My Schedule.**'),
- ('shot', '[[Screenshot: My Schedule and Department entries highlighted in the schedule list]]'),
- ('step', 'Highlight your name under **My Schedule** to see the appointments for today.'),
-
- ('h2', 'Review Patient Information', 'pagebreak'),
- ('step', 'Highlight an appointment on your **Schedule** to view additional patient information.'),
- ('step', 'Review the **SnapShot** report on the **Report Pane** from the **Schedule**.'),
- ('shot', '[[Screenshot: SnapShot report on the Report Pane]]'),
- ('step', 'If this is a commonly used **Report**, you can create a button on the **Report Pane** toolbar, so you do not have to search for it every time.'),
- ('step', 'Click the wrench on the **Report Pane** toolbar next to the **Search** field.'),
- ('step', 'The **Add or Remove Buttons** from **Toolbar** window appears.'),
- ('step', 'Click the **Add Current** button to pull in the current viewed **Report.**'),
- ('tip', 'You can change the **Button Name** in this window to your preference.'),
- ('step', 'Click **Accept**. The button is permanently added to your **Report Pane**.'),
-
- ('h2', 'Rooming a Patient', 'pagebreak'),
- ('h3', 'Document the Reason for Visit'),
- ('step', 'Open the **Rooming** activity tab and select the **Reason for Visit** section.'),
- ('shot', '[[Screenshot: Rooming activity tabs with Reason for Visit]]'),
- ('step', 'Use the speed buttons to select the **Chief Complaint**.'),
- ('note', "If you don't see a button for the patient's chief complaint, search for it in the **Chief Complaint** field. Enter the first few letters of the complaint and press **Enter**. A list of matching complaints appears. Double-click a complaint to select it."),
- ('step', 'Click one of the common **Chief Complaint buttons**. Or, in the **Chief Complaint** field, enter the first few letters of the complaint and press **Enter**. In the list of matches that appear, double-click a reason to select.'),
- ('shot', '[[Screenshot: Reason for Visit section with Chief Complaint buttons]]'),
-
- ('h3', 'Document Vitals'),
- ('step', 'Click the Vitals section to document the appropriate fields.'),
- ('tip', 'A Pain Score can also be documented under the Vitals section.'),
- ('step', 'To add another set of vitals for this visit, click **New Reading**. A new column with today\'s date and time appears.'),
- ('shot', '[[Screenshot: Vitals section]]'),
-
- ('h3', "Review and Update the Patient's Allergies"),
- ('step', 'Click the **Allergies** section.'),
- ('shot', '[[Screenshot: Allergies section]]'),
- ('step', 'To indicate that the patient does not have any allergies, select the **No Known Allergies** check box and click **Mark as Reviewed**.'),
- ('step', "To indicate that you were unable to assess the patient's allergies, click **Unable to Assess**, then enter a reason."),
- ('step', 'To add an allergy:'),
- ('bullet', 'Enter the first few letters of the allergy in the [[icon]] **Add** field and press **Enter**. A list of matching allergens appears.'),
- ('bullet', "Double-click the appropriate allergy and enter information like the type of allergy and the patient's reaction."),
- ('bullet', 'Click [[icon]] Accept.'),
- ('step', 'To update an allergy, click the name of an allergen and edit the information, as necessary.'),
- ('step', 'If an allergy was entered in error, click [[icon]] **Delete** and enter a reason for deletion.'),
- ('step', 'When you are done updating allergies, click [[icon]] **Mark as Reviewed**.'),
- ('note', "Marking a section of the patient's chart as reviewed is similar to initialing the paper chart. The chart is updated to indicate that you last reviewed the information, and the date and time appear."),
-
- ('h3', "Update a Patient's Current Medications"),
- ('step', 'Click the Med Review section.'),
- ('shot', '[[Screenshot: Med Review section]]'),
- ('step', 'Select or clear the Taking? check box to indicate whether the patient is currently taking a medication.'),
- ('step', 'To flag a medication for removal that the patient is no longer taking, hover your mouse over the medication and click the [[icon: red X]] that appears on the right.'),
- ('shot', '[[Screenshot: Med Review section with the red X on a medication]]'),
- ('step', 'The **Remove Order** window opens. Confirm the **Flag for removal** button is highlighted and click **Accept**.'),
-
- ('h3', 'Add a Patient-Reported Medication'),
- ('step', "In the **Med Review** section, click in the **Add Medication** search field, enter part of the medication's name and press **Enter**. A list of matching medications appears."),
- ('step', 'Double-click the appropriate medication.'),
- ('step', "Enter information about the medication, such as the dose, when the patient started taking it, and the frequency. Click **Accept**."),
- ('step', "When you have finished reviewing and updating the patient's medications, click [[icon]] Mark as Reviewed."),
-
- ('h3', "Verify the Patient's Pharmacy"),
- ('step', 'Ask the patient if the pharmacy listed in the **Med Review** section is correct.'),
- ('step', 'To change the pharmacy, click the **pharmacy name**.'),
- ('note', 'If the patient does not have a pharmacy, click **No pharmacy Selected** button.'),
- ('step', "Choose one of the suggested pharmacies or search for the patient’s preferred pharmacy and click **Accept**."),
-
- ('h3', 'Reconcile Outside Medication Info'),
- ('p', "When another organization has a medication on file for the patient, a banner appears at the top of the **Med Review** section. This data can come from other organizations that see the patient or from an outside pharmacy."),
- ('step', 'In the **Med Review** section, click **Go Reconcile** [[icon]] in the banner that indicates medications from outside sources are available.'),
- ('shot', '[[Screenshot: New medications from outside sources banner with Go Reconcile]]'),
- ('step', 'Review the information that appears in the **Reconcile Outside Info** activity.'),
- ('step', 'Click [[icon: green plus]] for any medications the patient confirms that they are taking. The **Medication Details** window opens.'),
- ('step', 'Enter information about the medication ([[icon: red !]] means that an item is required) and click **Accept**.'),
- ('note', '[[icon: ?]] appears next to medications that do not have an exact match in Epic. For example, a patient might report a brand name medication but not its strength. When you click [[icon: green plus]], you must enter a matching medication in the **Medication Details** window.'),
- ('step', 'Click [[icon: trash can]] for any medications that the patient denies taking.'),
- ('step', "When you are finished, click [[icon]] **Accept** to add the reconciled medications to the patient's medication list."),
-
- ('h3', "Document Patient’s Medical, Surgical, Family and Social History"),
- ('step', 'Click on the **History** section.'),
- ('shot', '[[Screenshot: History section, General Medical History]]'),
- ('step', 'Update the items as needed.'),
- ('tip', 'You can use the paper icon to add additional comments.'),
- ('step', 'Use the **green plus sign next to Add** to search for and add items that are not already listed.'),
- ('step', 'Indicate that you have reviewed and updated the history for the patient by clicking **Mark as Reviewed**.'),
- ('step', 'Repeat the steps above and document **Surgical history** as appropriate.'),
-
- ('h3', 'Exploring Family History'),
- ('step', 'Scroll down to the **Family History** and document information provided by the patient.'),
- ('shot', '[[Screenshot: Family History grid]]'),
- ('step', 'To update the living status of a family member, left click in the **Status** field to make changes.'),
- ('step', 'Click **Mark as Reviewed**.'),
-
- ('h3', 'Exploring Substance and Sexual Activity History'),
- ('step', 'Review and document the **Substance** and **Sexual Activity** history as needed.'),
- ('step', 'Click **Mark as Reviewed**.'),
-]
+PURPLE = 'C3A6F0'   # Word has no purple highlight, so shading is used
+BLANK = '[' + '\u00a0' * 6 + ']'
 
 # ---------------------------------------------------------------- helpers
 def esc(t):
     return t.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 
 def runs(text, base_rpr='', italic=False):
-    """Parse **bold** and [[placeholder]] markup into runs."""
+    """Parse **bold**, [[marker]], ((blank)) and {{link:rId|text}} markup into runs."""
     out = []
-    for part in re.split(r'(\[\[.*?\]\])', text):
+    for part in re.split(r'(\[\[.*?\]\]|\(\(blank\)\)|\{\{link:.*?\}\})', text):
         if not part:
             continue
         if part.startswith('[['):
             label = '[' + part[2:-2] + ']'
             out.append('<w:r><w:rPr>%s<w:highlight w:val="yellow"/></w:rPr><w:t xml:space="preserve">%s</w:t></w:r>' % (base_rpr, esc(label)))
+            continue
+        if part == '((blank))':
+            out.append('<w:r><w:rPr>%s<w:shd w:val="clear" w:color="auto" w:fill="%s"/></w:rPr><w:t xml:space="preserve">%s</w:t></w:r>' % (base_rpr, PURPLE, BLANK))
+            continue
+        if part.startswith('{{link:'):
+            rid, label = part[7:-2].split('|', 1)
+            out.append('<w:hyperlink r:id="%s" w:history="1"><w:r><w:rPr><w:rStyle w:val="Hyperlink"/></w:rPr><w:t xml:space="preserve">%s</w:t></w:r></w:hyperlink>' % (rid, esc(label)))
             continue
         for i, seg in enumerate(part.split('**')):
             if not seg:
@@ -148,15 +64,19 @@ def heading(level, text):
     return ('<w:p><w:pPr><w:pStyle w:val="Heading%d"/></w:pPr><w:bookmarkStart w:id="%d" w:name="%s"/>'
             '<w:r><w:t>%s</w:t></w:r><w:bookmarkEnd w:id="%d"/></w:p>') % (level, _bm[0], name, esc(text), _bm[0])
 
-def plain(text):
-    return '<w:p>%s</w:p>' % runs(text)
+def plain(text, keep=False):
+    return '<w:p>%s%s</w:p>' % ('<w:pPr><w:keepNext/></w:pPr>' if keep else '', runs(text))
 
 def list_item(text, numid, ilvl, keep=False):
     return ('<w:p><w:pPr><w:pStyle w:val="ListParagraph"/>%s<w:numPr><w:ilvl w:val="%d"/><w:numId w:val="%d"/></w:numPr></w:pPr>%s</w:p>'
             % ('<w:keepNext/>' if keep else '', ilvl, numid, runs(text)))
 
-def shot(text):
-    return '<w:p><w:pPr><w:ind w:left="720"/></w:pPr>%s</w:p>' % runs(text)
+def shot(text, indent=720):
+    return '<w:p><w:pPr>%s</w:pPr>%s</w:p>' % ('<w:ind w:left="%d"/>' % indent if indent else '', runs(text))
+
+def bullet0(text, numid, keep=False):
+    return ('<w:p><w:pPr><w:pStyle w:val="ListParagraph"/>%s<w:numPr><w:ilvl w:val="1"/><w:numId w:val="%d"/></w:numPr>'
+            '<w:ind w:left="720" w:hanging="360"/></w:pPr>%s</w:p>' % ('<w:keepNext/>' if keep else '', numid, runs(text)))
 
 PAGEBREAK = '<w:p><w:r><w:br w:type="page"/></w:r></w:p>'
 
@@ -205,7 +125,7 @@ in_list = False
 for idx, item in enumerate(CONTENT):
     kind, text = item[0], item[1]
     nxt = CONTENT[idx + 1][0] if idx + 1 < len(CONTENT) else ''
-    keep = nxt in ('shot', 'tip', 'note')
+    keep = nxt in ('shot', 'shot0', 'tip', 'note')
     flags = item[2:] if len(item) > 2 else ()
     if kind in ('h1', 'h2', 'h3'):
         if 'pagebreak' in flags:
@@ -215,15 +135,21 @@ for idx, item in enumerate(CONTENT):
         body.append(heading(int(kind[1]), text))
         in_list = False
     elif kind == 'p':
-        body.append(plain(text)); in_list = False
+        body.append(plain(text, keep)); in_list = False
     elif kind == 'step':
         if not in_list:
             new_list(); in_list = True
         body.append(list_item(text, current, 0, keep))
     elif kind == 'bullet':
         body.append(list_item(text, current, 1, keep))
+    elif kind == 'bullet0':
+        if not in_list:
+            new_list(); in_list = True
+        body.append(bullet0(text, current, keep))
     elif kind == 'shot':
-        body.append(shot(text).replace('<w:pPr>', '<w:pPr>' + ('<w:keepNext/>' if False else ''), 1))
+        body.append(shot(text))
+    elif kind == 'shot0':
+        body.append(shot(text, 0))
     elif kind in ('tip', 'note'):
         body.append(box(kind, text))
 
@@ -282,8 +208,12 @@ def set_text(par, text):
     first = re.sub(r'<w:t[^>]*>.*?</w:t>', '<w:t xml:space="preserve">%s</w:t>' % esc(text), first, flags=re.S)
     start = par.index(rs[0]); end = par.index(rs[-1]) + len(rs[-1])
     return par[:start] + first + par[end:]
-h = h.replace(paras[1], set_text(paras[1], TITLE + ' Quick Start Guide'))
+h = h.replace(paras[1], set_text(paras[1], HEADER_TITLE))
 h = h.replace(paras[2], set_text(paras[2], APP_AUD))
+# brand word in the header line 1 becomes the purple blank placeholder
+m = re.search(r'<w:r( [^>]*)?>(<w:rPr>(?:(?!</w:rPr>).)*</w:rPr>)<w:t>Epic</w:t></w:r>', h, re.S)
+assert m, 'brand run not found'
+h = h.replace(m.group(0), m.group(0).replace('</w:rPr>', '<w:shd w:val="clear" w:color="auto" w:fill="%s"/></w:rPr>' % PURPLE, 1).replace('<w:t>Epic</w:t>', '<w:t>%s</w:t>' % BLANK))
 open(p, 'w', encoding='utf8').write(h)
 
 # content type: template -> document ; core title
@@ -292,8 +222,22 @@ c = open(p, encoding='utf8').read().replace('wordprocessingml.template.main+xml'
 open(p, 'w', encoding='utf8').write(c)
 p = os.path.join(work, 'docProps/core.xml')
 c = open(p, encoding='utf8').read()
-c = re.sub(r'<dc:title>.*?</dc:title>', '<dc:title>%s Quick Start Guide</dc:title>' % TITLE, c)
+c = re.sub(r'<dc:title>.*?</dc:title>', '<dc:title>%s</dc:title>' % esc(HEADER_TITLE), c)
 open(p, 'w', encoding='utf8').write(c)
+
+# template name and old links must not leak into the finished guide
+p = os.path.join(work, 'docProps/app.xml')
+c = open(p, encoding='utf8').read()
+c = re.sub(r'<Template>.*?</Template>', '<Template>Normal.dotm</Template>', c)
+c = c.replace('Epic Training Quick Start Guide', esc(HEADER_TITLE))
+open(p, 'w', encoding='utf8').write(c)
+p = os.path.join(work, 'word/_rels/document.xml.rels')
+c = open(p, encoding='utf8').read()
+c = re.sub(r'<Relationship Id="rId\d+"[^>]*epic\.com[^>]*/>', '', c)
+add = ''.join('<Relationship Id="%s" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="%s" TargetMode="External"/>' % (k, esc(v)) for k, v in LINKS.items())
+c = c.replace('</Relationships>', add + '</Relationships>')
+open(p, 'w', encoding='utf8').write(c)
+
 
 if os.path.exists(OUT):
     os.remove(OUT)

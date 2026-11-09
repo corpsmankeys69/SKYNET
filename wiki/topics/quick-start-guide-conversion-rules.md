@@ -3,8 +3,8 @@ title: Quick Start Guide Conversion Rules
 aliases: [QSG conversion, rebuild old guides on template]
 tags: [template, process, documentation]
 created: 2026-10-06
-updated: 2026-10-06
-sources: [sources/2026-10-06-amb-clinician-rooming-a-patient-nurse-v3-old.pdf, sources/2026-10-06-epic-training-quick-start-guide-template.md]
+updated: 2026-11-09
+sources: [sources/2026-10-06-amb-clinician-rooming-a-patient-nurse-v3-old.pdf, sources/2026-11-09-amb-bcma-faq-v8-old.docx, sources/2026-10-06-epic-training-quick-start-guide-template.md]
 ---
 
 # Quick Start Guide Conversion Rules
@@ -25,9 +25,21 @@ Rules the user set for rebuilding old PDF guides on the [[Epic Training Quick St
 - Edits: fix grammar and typos only. Never merge or drop steps. Report duplicates and oddities to the user.
 - Page references: not used in the first guide. Rule unanswered; ask when one appears.
 
-## How a guide was built
-- Script: tools/build_guide.py. Unzip the template (sources/2026-10-06-epic-training-quick-start-guide-template.dotx), edit the CONTENT list, run `python3 -I tools/build_guide.py <unzipped template dir> <out.docx> [pages.json]`. It clones the template's own callout tables and icons, restarts numbering per list, sets the header, and fills TOC page numbers from a LibreOffice render. Word's F9 refreshes the TOC.
+## FAQ-style sources (first seen 2026-11-09, AMB BCMA FAQ)
+- "update this as before" means: apply every rule on this page to the new file. The source can be a .docx as well as a PDF.
+- Header line 2 uses the source's own title. For an FAQ the template's "Quick Start Guide" suffix is dropped (it would read "FAQ Quick Start Guide"). Header line 3 comes from the source header ("Ambulatory | Clinician").
+- Structure: Heading 1 is the source title, one Heading 2 groups the questions ("Frequently Asked Questions"), and each question is a Heading 3 so the TOC lists every question. Putting each question at Heading 2 would force a new page per question.
+- The "Q:" and "A:" labels are dropped; the heading style and the plain answer paragraph carry that meaning. Answers stay in Normal style.
+- Hyperlinks (email, policy links) are kept as live links. Source text color (grey) is not kept.
+- Standalone bullets use the template's bullet level with a 0.5 in indent.
+- Screenshots in the middle of an answer become `[Screenshot: ...]` lines at that position. A screenshot the source placed before its text, where the text says "below", goes after the text.
+- The footer is not touched: "v1.0 09.28.2026 INITIALS" and "UW Medicine | Fred Hutch" stay for the user to edit, even though the source footer said "v.8 2024.1231 EYL" and "FHCC".
+
+## How a guide is built
+- tools/run_guide.sh <config.py> <out.docx> builds from the template stored in sources/, renders with LibreOffice, fills TOC page numbers until stable, and validates. A guide's text lives in a config file: tools/guides/rooming.py and tools/guides/bcma_faq.py. tools/build_guide.py documents the content kinds and inline markup (bold, yellow hand-added markers, purple blank, links).
+- It clones the template's own callout tables and icons, restarts numbering per list, sets the header, shades the header brand word as the purple blank, and removes the template name and old links from the file internals. Word's F9 refreshes the TOC.
+- Regression check: rebuilding the Rooming guide from its config gives text identical to the delivered file.
 
 ## Open items
-- Page reference and alternate-guide boxes: no rule yet.
+- Page reference and alternate-guide boxes: no rule yet. The BCMA FAQ says "refer to the BCMA tip sheet" in one answer; it was left as plain text.
 - eLearning reference boxes: none in the first guide.

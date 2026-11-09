@@ -31,3 +31,9 @@ major edit. See `CLAUDE.md` §6 for the format contract.
 ## 2026-10-12 — Removed the word "Epic" from the first guide
 - Updated: [[Quick Start Guide Conversion Rules]]; deliverables/Epic_Training_Quick_Start_Guide_Outpatient_Clinician_Rooming_a_Patient.docx
 - Notes: Supersedes the earlier "[Epic]" placeholder. Header and callout now hold a blank purple placeholder. Also removed the template name from document properties and two unused epic.com link relationships. The file name still contains "Epic".
+
+## 2026-11-09 — Converted the AMB BCMA FAQ onto the template; made the builder reusable
+- Source: sources/2026-11-09-amb-bcma-faq-v8-old.docx (v.8 2024.1231 EYL)
+- Created: deliverables/Epic_Training_Quick_Start_Guide_AMB_BCMA_FAQ.docx, tools/run_guide.sh, tools/guides/rooming.py, tools/guides/bcma_faq.py
+- Updated: [[Quick Start Guide Conversion Rules]] (FAQ rules, new build instructions, open item), tools/build_guide.py (now config-driven; adds links, standalone bullets, blank placeholder, file-internals cleanup)
+- Notes: Two "Epic" mentions in answers and the header brand word are purple blanks. Judgment calls to confirm with the user: header drops "Quick Start Guide"; one Heading 2 groups the questions; "Q:"/"A:" labels dropped; "Best Practice for to document" left as written (missing word, not guessed). Rooming guide rebuilds to identical text.

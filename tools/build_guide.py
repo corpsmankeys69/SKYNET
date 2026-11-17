@@ -10,6 +10,7 @@ Content kinds:
   step / bullet   numbered step (restarts per list) / level-2 bullet under a step
   bullet0         standalone bullet list item (not under a step)
   shot / shot0    highlighted [Screenshot: ...] placeholder, indented under a step / flush left
+  table           data table: text = {'widths': [twips...], 'title': str|None, 'header': [...], 'rows': [[...]]}; black 0.5 pt borders, bold header, no shading
   tip / note      Efficiency Tip box / Important Note box (cloned from the template, icons kept)
 Inline markup: **bold**, __italic__, [[hand-added marker]] (yellow), ((blank)) (purple blank placeholder),
                {{link:rId|text}} (hyperlink using LINKS[rId]).
@@ -56,18 +57,30 @@ def runs(text, base_rpr='', italic=False):
                 if not sub:
                     continue
                 it = '<w:i/><w:iCs/>' if j % 2 else ''
-                out.append('<w:r><w:rPr>%s%s%s</w:rPr><w:t xml:space="preserve">%s</w:t></w:r>' % (base_rpr, b, it, esc(sub)))
+                out.append('<w:r><w:rPr>%s%s%s</w:rPr><w:t xml:space="preserve">%s</w:t></w:r>' % (base_rpr, b, it, esc(sub).replace('\n', '</w:t><w:br/><w:t xml:space="preserve">')))
     return ''.join(out)
 
 _bm = [100]
 toc_entries = []  # (level, text, bookmark)
+
+def plain_h(text):
+    return text.replace('((blank))', BLANK)
+
+def heading_runs(text, base_rpr=''):
+    out = []
+    for i, piece in enumerate(text.split('((blank))')):
+        if i:
+            out.append('<w:r><w:rPr>%s<w:shd w:val="clear" w:color="auto" w:fill="%s"/></w:rPr><w:t xml:space="preserve">%s</w:t></w:r>' % (base_rpr, PURPLE, BLANK))
+        if piece:
+            out.append('<w:r>%s<w:t xml:space="preserve">%s</w:t></w:r>' % ('<w:rPr>%s</w:rPr>' % base_rpr if base_rpr else '', esc(piece)))
+    return ''.join(out)
 
 def heading(level, text):
     _bm[0] += 1
     name = '_Toc2414%05d' % _bm[0]
     toc_entries.append((level, text, name))
     return ('<w:p><w:pPr><w:pStyle w:val="Heading%d"/></w:pPr><w:bookmarkStart w:id="%d" w:name="%s"/>'
-            '<w:r><w:t>%s</w:t></w:r><w:bookmarkEnd w:id="%d"/></w:p>') % (level, _bm[0], name, esc(text), _bm[0])
+            '%s<w:bookmarkEnd w:id="%d"/></w:p>') % (level, _bm[0], name, heading_runs(text), _bm[0])
 
 def plain(text, keep=False):
     return '<w:p>%s%s</w:p>' % ('<w:pPr><w:keepNext/></w:pPr>' if keep else '', runs(text))
@@ -84,6 +97,35 @@ def bullet0(text, numid, keep=False, left=720):
             '<w:ind w:left="%d" w:hanging="360"/></w:pPr>%s</w:p>' % ('<w:keepNext/>' if keep else '', numid, left, runs(text)))
 
 PAGEBREAK = '<w:p><w:r><w:br w:type="page"/></w:r></w:p>'
+
+BORDERS = ''.join('<w:%s w:val="single" w:sz="4" w:space="0" w:color="auto"/>' % e for e in ('top', 'left', 'bottom', 'right', 'insideH', 'insideV'))
+
+def data_table(spec):
+    """spec: {'widths': [...], 'title': str|None, 'header': [...], 'rows': [[...], ...]}; borders match the callout boxes, no shading."""
+    widths = spec['widths']
+    total = sum(widths)
+    def cell(text, w, bold=False, span=1):
+        tcpr = '<w:tcW w:w="%d" w:type="dxa"/>%s' % (w, '<w:gridSpan w:val="%d"/>' % span if span > 1 else '')
+        rpr = '<w:b/><w:bCs/>' if bold else ''
+        return '<w:tc><w:tcPr>%s</w:tcPr><w:p><w:pPr><w:keepNext/><w:spacing w:before="40" w:after="40"/></w:pPr>%s</w:p></w:tc>' % (tcpr, runs(text, base_rpr=rpr))
+    def row(cells, header=False):
+        trpr = '<w:trPr><w:cantSplit/>%s</w:trPr>' % ('<w:tblHeader/>' if header else '')
+        return '<w:tr>%s%s</w:tr>' % (trpr, ''.join(cells))
+    rows = []
+    if spec.get('title'):
+        rows.append(row([cell(spec['title'], total, True, len(widths))]))
+    rows.append(row([cell(t, w, True) for t, w in zip(spec['header'], widths)], header=True))
+    for r in spec['rows']:
+        rows.append(row([cell(t, w) for t, w in zip(r, widths)]))
+    # keepNext on every row but the last keeps the table on one page
+    xml = ('<w:tbl><w:tblPr><w:tblW w:w="%d" w:type="dxa"/><w:tblInd w:w="115" w:type="dxa"/><w:tblBorders>%s</w:tblBorders>'
+           '<w:tblLayout w:type="fixed"/><w:tblLook w:val="04A0" w:firstRow="1" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:noHBand="0" w:noVBand="1"/></w:tblPr>'
+           '<w:tblGrid>%s</w:tblGrid>%s</w:tbl>') % (total, BORDERS, ''.join('<w:gridCol w:w="%d"/>' % w for w in widths), ''.join(rows))
+    i = xml.rfind('<w:keepNext/>')
+    # last row: drop keepNext so the table does not chain onto the next paragraph
+    last = xml.rfind('<w:tr>')
+    xml = xml[:last] + xml[last:].replace('<w:keepNext/>', '')
+    return xml + '<w:p/>' 
 
 # callout box templates cloned from the template's own tables
 d = open(os.path.join(SRC, 'word/document.xml'), encoding='utf8').read()
@@ -130,7 +172,7 @@ in_list = False
 for idx, item in enumerate(CONTENT):
     kind, text = item[0], item[1]
     nxt = CONTENT[idx + 1][0] if idx + 1 < len(CONTENT) else ''
-    keep = nxt in ('shot', 'shot0', 'tip', 'note')
+    keep = nxt in ('shot', 'shot0', 'tip', 'note', 'table')
     flags = item[2:] if len(item) > 2 else ()
     if kind in ('h1', 'h2', 'h3'):
         if 'pagebreak' in flags:
@@ -161,10 +203,12 @@ for idx, item in enumerate(CONTENT):
         body.append(shot(text, 0))
     elif kind in ('tip', 'note'):
         body.append(box(kind, text))
+    elif kind == 'table':
+        body.append(data_table(text)); in_list = in_list
 
 # TOC ------------------------------------------------------------------
 def toc_para(level, text, bm, first):
-    pg = str(pages.get(text, 2))
+    pg = str(pages.get(plain_h(text), 2))
     ppr = ('<w:pPr><w:pStyle w:val="TOC%d"/><w:tabs><w:tab w:val="right" w:leader="dot" w:pos="9350"/></w:tabs>'
            '<w:rPr><w:rFonts w:asciiTheme="minorHAnsi" w:eastAsiaTheme="minorEastAsia" w:hAnsiTheme="minorHAnsi" w:cstheme="minorBidi"/>'
            '<w:noProof/><w:kern w:val="2"/><w:sz w:val="24"/><w:szCs w:val="24"/><w14:ligatures w14:val="standardContextual"/></w:rPr></w:pPr>') % level
@@ -173,11 +217,11 @@ def toc_para(level, text, bm, first):
         start = ('<w:r><w:fldChar w:fldCharType="begin"/></w:r><w:r><w:instrText xml:space="preserve"> TOC \\o "1-3" \\h \\z \\u </w:instrText></w:r>'
                  '<w:r><w:fldChar w:fldCharType="separate"/></w:r>')
     nw = '<w:rPr><w:noProof/><w:webHidden/></w:rPr>'
-    link = ('<w:hyperlink w:anchor="%s" w:history="1"><w:r><w:rPr><w:rStyle w:val="Hyperlink"/><w:noProof/></w:rPr><w:t>%s</w:t></w:r>'
+    link = ('<w:hyperlink w:anchor="%s" w:history="1">%s'
             '<w:r>%s<w:tab/></w:r><w:r>%s<w:fldChar w:fldCharType="begin"/></w:r>'
             '<w:r>%s<w:instrText xml:space="preserve"> PAGEREF %s \\h </w:instrText></w:r>'
             '<w:r>%s<w:fldChar w:fldCharType="separate"/></w:r><w:r>%s<w:t>%s</w:t></w:r><w:r>%s<w:fldChar w:fldCharType="end"/></w:r></w:hyperlink>'
-            ) % (bm, esc(text), nw, nw, nw, bm, nw, nw, pg, nw)
+            ) % (bm, heading_runs(text, '<w:rStyle w:val="Hyperlink"/><w:noProof/>'), nw, nw, nw, bm, nw, nw, pg, nw)
     return '<w:p>%s%s%s</w:p>' % (ppr, start, link)
 
 toc_xml = ''.join(toc_para(l, t, b, i == 0) for i, (l, t, b) in enumerate(toc_entries))
@@ -270,5 +314,5 @@ for rel in order:
     z.write(os.path.join(work, rel), rel)
 z.close()
 shutil.rmtree(work)
-json.dump([t for _, t, _ in toc_entries], open(OUT + '.headings.json', 'w'))
+json.dump([plain_h(t) for _, t, _ in toc_entries], open(OUT + '.headings.json', 'w'))
 print('built', OUT, 'headings:', len(toc_entries), 'lists:', len(nums))

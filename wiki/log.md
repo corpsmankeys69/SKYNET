@@ -43,3 +43,9 @@ major edit. See `CLAUDE.md` §6 for the format contract.
 - Created: deliverables/Epic_Training_Quick_Start_Guide_Procedure_Documentation_Tip_Sheet.docx, tools/guides/procedure_documentation.py
 - Updated: [[Quick Start Guide Conversion Rules]] (tip-sheet rules), tools/build_guide.py (italic markup, extra bullet levels, purple blank inside header line 3)
 - Notes: Epic appeared in header lines 1 and 3 only; both are purple blanks and a search of the file finds none left. Four callout boxes mapped by icon. Placement of floating screenshots was decided from what each image shows.
+
+## 2026-11-17 — Converted the AMB MyChart Practice (PRA) Environment tip sheet onto the template
+- Source: sources/2026-11-17-amb-mychart-practice-environment-tipsheet-old.pdf (footer 09/18/22 JMAMB/DAP | UW Medicine | FHCC)
+- Created: deliverables/Epic_Training_Quick_Start_Guide_MyChart_PRA_Environment_Tip_Sheet.docx, tools/guides/mychart_pra.py
+- Updated: [[Quick Start Guide Conversion Rules]] (tables, URLs, callout meaning rule), tools/build_guide.py (data tables, blanks inside headings and TOC, line breaks)
+- Notes: Seven "Epic" mentions in text plus the header brand word are purple blanks. Two URLs that contain "epic" (host name and path) were kept so the links keep working. Data tables follow the callout style with no shading, which departs from the source's purple header; flagged to the user.

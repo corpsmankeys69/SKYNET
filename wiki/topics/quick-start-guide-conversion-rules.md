@@ -4,7 +4,7 @@ aliases: [QSG conversion, rebuild old guides on template]
 tags: [template, process, documentation]
 created: 2026-10-06
 updated: 2026-11-17
-sources: [sources/2026-10-06-amb-clinician-rooming-a-patient-nurse-v3-old.pdf, sources/2026-11-09-amb-bcma-faq-v8-old.docx, sources/2026-11-17-procedure-documentation-tipsheet-old.docx, sources/2026-10-06-epic-training-quick-start-guide-template.md]
+sources: [sources/2026-10-06-amb-clinician-rooming-a-patient-nurse-v3-old.pdf, sources/2026-11-09-amb-bcma-faq-v8-old.docx, sources/2026-11-17-procedure-documentation-tipsheet-old.docx, sources/2026-11-17-amb-mychart-practice-environment-tipsheet-old.pdf, sources/2026-10-06-epic-training-quick-start-guide-template.md]
 ---
 
 # Quick Start Guide Conversion Rules
@@ -45,8 +45,16 @@ Rules the user set for rebuilding old PDF guides on the [[Epic Training Quick St
 - Text that Word split across lines ("atcompletion", a sentence cut in two paragraphs) is rejoined. Comma splices are fixed as in earlier guides.
 - Source margins, footer text, and page setup are replaced by the template's.
 
+## Tables and URLs (first seen 2026-11-17, MyChart PRA tip sheet)
+- The template defines no data table, so tables copy the callout boxes: 0.5 pt black borders, no shading, bold header row, template body font. The source's purple header fill is not kept. Judgment call; brand purple 38296B with white text is the alternative if the user wants it.
+- A table title that spans all columns is a merged first row.
+- A source with no separate title page gets Heading 1 from its header title. Two same-level section headings become two Heading 2 main topics, each on its own page, so a one-page source grows to three pages with the TOC.
+- A callout's meaning beats its source icon when they disagree. A prerequisite that prevents errors (connect to the VPN first) is an Important Note even if the source drew an "i".
+- Headings can hold the purple blank. It also appears in the TOC entry.
+- "Epic" inside a URL (host name or path) is left alone: changing it breaks the live link. The link stays, and the user is told. Practice-environment logins in tables are copied exactly.
+
 ## How a guide is built
-- tools/run_guide.sh <config.py> <out.docx> builds from the template stored in sources/, renders with LibreOffice, fills TOC page numbers until stable, and validates. A guide's text lives in a config file: tools/guides/rooming.py, tools/guides/bcma_faq.py, and tools/guides/procedure_documentation.py. tools/build_guide.py documents the content kinds and inline markup (bold, italic, yellow hand-added markers, purple blank, links, extra bullet levels).
+- tools/run_guide.sh <config.py> <out.docx> builds from the template stored in sources/, renders with LibreOffice, fills TOC page numbers until stable, and validates. A guide's text lives in a config file: tools/guides/rooming.py, tools/guides/bcma_faq.py, tools/guides/procedure_documentation.py, tools/guides/mychart_pra.py. tools/build_guide.py documents the content kinds and inline markup (bold, italic, yellow hand-added markers, purple blank, links, extra bullet levels, data tables, line breaks).
 - It clones the template's own callout tables and icons, restarts numbering per list, sets the header, shades the header brand word as the purple blank, and removes the template name and old links from the file internals. Word's F9 refreshes the TOC.
 - Regression check: rebuilding the Rooming guide from its config gives text identical to the delivered file.
 

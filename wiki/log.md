@@ -37,3 +37,9 @@ major edit. See `CLAUDE.md` §6 for the format contract.
 - Created: deliverables/Epic_Training_Quick_Start_Guide_AMB_BCMA_FAQ.docx, tools/run_guide.sh, tools/guides/rooming.py, tools/guides/bcma_faq.py
 - Updated: [[Quick Start Guide Conversion Rules]] (FAQ rules, new build instructions, open item), tools/build_guide.py (now config-driven; adds links, standalone bullets, blank placeholder, file-internals cleanup)
 - Notes: Two "Epic" mentions in answers and the header brand word are purple blanks. Judgment calls to confirm with the user: header drops "Quick Start Guide"; one Heading 2 groups the questions; "Q:"/"A:" labels dropped; "Best Practice for to document" left as written (missing word, not guessed). Rooming guide rebuilds to identical text.
+
+## 2026-11-17 — Converted the Procedure Documentation tip sheet onto the template
+- Source: sources/2026-11-17-procedure-documentation-tipsheet-old.docx (footer 05.01.2020 UW Medicine | SCCA)
+- Created: deliverables/Epic_Training_Quick_Start_Guide_Procedure_Documentation_Tip_Sheet.docx, tools/guides/procedure_documentation.py
+- Updated: [[Quick Start Guide Conversion Rules]] (tip-sheet rules), tools/build_guide.py (italic markup, extra bullet levels, purple blank inside header line 3)
+- Notes: Epic appeared in header lines 1 and 3 only; both are purple blanks and a search of the file finds none left. Four callout boxes mapped by icon. Placement of floating screenshots was decided from what each image shows.

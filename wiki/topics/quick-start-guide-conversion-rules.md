@@ -3,8 +3,8 @@ title: Quick Start Guide Conversion Rules
 aliases: [QSG conversion, rebuild old guides on template]
 tags: [template, process, documentation]
 created: 2026-10-06
-updated: 2026-11-09
-sources: [sources/2026-10-06-amb-clinician-rooming-a-patient-nurse-v3-old.pdf, sources/2026-11-09-amb-bcma-faq-v8-old.docx, sources/2026-10-06-epic-training-quick-start-guide-template.md]
+updated: 2026-11-17
+sources: [sources/2026-10-06-amb-clinician-rooming-a-patient-nurse-v3-old.pdf, sources/2026-11-09-amb-bcma-faq-v8-old.docx, sources/2026-11-17-procedure-documentation-tipsheet-old.docx, sources/2026-10-06-epic-training-quick-start-guide-template.md]
 ---
 
 # Quick Start Guide Conversion Rules
@@ -35,8 +35,18 @@ Rules the user set for rebuilding old PDF guides on the [[Epic Training Quick St
 - Screenshots in the middle of an answer become `[Screenshot: ...]` lines at that position. A screenshot the source placed before its text, where the text says "below", goes after the text.
 - The footer is not touched: "v1.0 09.28.2026 INITIALS" and "UW Medicine | Fred Hutch" stay for the user to edit, even though the source footer said "v.8 2024.1231 EYL" and "FHCC".
 
+## Tip-sheet sources (first seen 2026-11-17, Procedure Documentation Tip Sheet)
+- Header line 2 again uses the source's own title ("Procedure Documentation Tip Sheet", no "Quick Start Guide" suffix). Header line 3 can carry a purple blank when the source names the application as Epic ("[blank] Care Ambulatory | Outpatient Practitioners").
+- Source headings map to the template levels by role, not by their old style: the title is Heading 1, workflows are Heading 2, subtopics are Heading 3. A source Heading 1 that is really a workflow ("Charge Capture") becomes Heading 2, and its Heading 2 child becomes Heading 3. A step the source styled as a heading ("Navigate to wrap-up") becomes a numbered step.
+- Source bullets that describe actions become numbered steps. "Field = value" lists stay as bullets, because the order is not a procedure. Deeper levels are bullets with extra indent.
+- Source boxes keep their meaning: a "!" box becomes an Important Note and an "i" box becomes an Efficiency Tip. A box with no icon that explains the screen becomes an Efficiency Tip.
+- Underline used for emphasis is dropped; a button label that was underlined becomes bold. Bold and italic from the source are kept.
+- Floating screenshots are placed after the step that the image shows, not where Word anchored them. Side-by-side screenshots become one placeholder each.
+- Text that Word split across lines ("atcompletion", a sentence cut in two paragraphs) is rejoined. Comma splices are fixed as in earlier guides.
+- Source margins, footer text, and page setup are replaced by the template's.
+
 ## How a guide is built
-- tools/run_guide.sh <config.py> <out.docx> builds from the template stored in sources/, renders with LibreOffice, fills TOC page numbers until stable, and validates. A guide's text lives in a config file: tools/guides/rooming.py and tools/guides/bcma_faq.py. tools/build_guide.py documents the content kinds and inline markup (bold, yellow hand-added markers, purple blank, links).
+- tools/run_guide.sh <config.py> <out.docx> builds from the template stored in sources/, renders with LibreOffice, fills TOC page numbers until stable, and validates. A guide's text lives in a config file: tools/guides/rooming.py, tools/guides/bcma_faq.py, and tools/guides/procedure_documentation.py. tools/build_guide.py documents the content kinds and inline markup (bold, italic, yellow hand-added markers, purple blank, links, extra bullet levels).
 - It clones the template's own callout tables and icons, restarts numbering per list, sets the header, shades the header brand word as the purple blank, and removes the template name and old links from the file internals. Word's F9 refreshes the TOC.
 - Regression check: rebuilding the Rooming guide from its config gives text identical to the delivered file.
 

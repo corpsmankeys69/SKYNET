@@ -4,13 +4,14 @@ Usage: python3 -I build_guide.py <template_unzipped_dir> <out_docx> <config.py> 
 
 Config (see guides/*.py) defines TITLE, HEADER_TITLE, APP_AUD, LINKS {rId: url}, CONTENT.
 Content kinds:
+  bullet3         third-level bullet under a step; bullet0b = second level of a standalone bullet list
   h1 h2 h3        headings (add 'pagebreak' as third item to start a main topic on a new page)
   p               plain paragraph (Normal style)
   step / bullet   numbered step (restarts per list) / level-2 bullet under a step
   bullet0         standalone bullet list item (not under a step)
   shot / shot0    highlighted [Screenshot: ...] placeholder, indented under a step / flush left
   tip / note      Efficiency Tip box / Important Note box (cloned from the template, icons kept)
-Inline markup: **bold**, [[hand-added marker]] (yellow), ((blank)) (purple blank placeholder),
+Inline markup: **bold**, __italic__, [[hand-added marker]] (yellow), ((blank)) (purple blank placeholder),
                {{link:rId|text}} (hyperlink using LINKS[rId]).
 Page numbers for the TOC come from pages.json (see run_guide.sh).
 """
@@ -51,7 +52,11 @@ def runs(text, base_rpr='', italic=False):
             if not seg:
                 continue
             b = '<w:b/><w:bCs/>' if i % 2 else ''
-            out.append('<w:r><w:rPr>%s%s</w:rPr><w:t xml:space="preserve">%s</w:t></w:r>' % (base_rpr, b, esc(seg)))
+            for j, sub in enumerate(seg.split('__')):
+                if not sub:
+                    continue
+                it = '<w:i/><w:iCs/>' if j % 2 else ''
+                out.append('<w:r><w:rPr>%s%s%s</w:rPr><w:t xml:space="preserve">%s</w:t></w:r>' % (base_rpr, b, it, esc(sub)))
     return ''.join(out)
 
 _bm = [100]
@@ -74,9 +79,9 @@ def list_item(text, numid, ilvl, keep=False):
 def shot(text, indent=720):
     return '<w:p><w:pPr>%s</w:pPr>%s</w:p>' % ('<w:ind w:left="%d"/>' % indent if indent else '', runs(text))
 
-def bullet0(text, numid, keep=False):
+def bullet0(text, numid, keep=False, left=720):
     return ('<w:p><w:pPr><w:pStyle w:val="ListParagraph"/>%s<w:numPr><w:ilvl w:val="1"/><w:numId w:val="%d"/></w:numPr>'
-            '<w:ind w:left="720" w:hanging="360"/></w:pPr>%s</w:p>' % ('<w:keepNext/>' if keep else '', numid, runs(text)))
+            '<w:ind w:left="%d" w:hanging="360"/></w:pPr>%s</w:p>' % ('<w:keepNext/>' if keep else '', numid, left, runs(text)))
 
 PAGEBREAK = '<w:p><w:r><w:br w:type="page"/></w:r></w:p>'
 
@@ -142,6 +147,10 @@ for idx, item in enumerate(CONTENT):
         body.append(list_item(text, current, 0, keep))
     elif kind == 'bullet':
         body.append(list_item(text, current, 1, keep))
+    elif kind == 'bullet3':      # third level under a step: bullet indented one more step
+        body.append(bullet0(text, current, keep, left=1800))
+    elif kind == 'bullet0b':     # second level of a standalone bullet list
+        body.append(bullet0(text, current, keep, left=1080))
     elif kind == 'bullet0':
         if not in_list:
             new_list(); in_list = True
@@ -205,9 +214,20 @@ paras = re.findall(r'<w:p [^>]*>.*?</w:p>', h, re.S)
 def set_text(par, text):
     rs = re.findall(r'<w:r[ >].*?</w:r>', par, re.S)
     first = rs[0]
-    first = re.sub(r'<w:t[^>]*>.*?</w:t>', '<w:t xml:space="preserve">%s</w:t>' % esc(text), first, flags=re.S)
     start = par.index(rs[0]); end = par.index(rs[-1]) + len(rs[-1])
-    return par[:start] + first + par[end:]
+    if '((blank))' not in text:
+        first = re.sub(r'<w:t[^>]*>.*?</w:t>', '<w:t xml:space="preserve">%s</w:t>' % esc(text), first, flags=re.S)
+        return par[:start] + first + par[end:]
+    # text holds a purple blank: rebuild the runs from the first run's formatting
+    rpr = re.search(r'<w:rPr>(.*?)</w:rPr>', first, re.S)
+    rpr = rpr.group(1) if rpr else ''
+    new = []
+    for i, piece in enumerate(text.split('((blank))')):
+        if i:
+            new.append('<w:r><w:rPr>%s<w:shd w:val="clear" w:color="auto" w:fill="%s"/></w:rPr><w:t xml:space="preserve">%s</w:t></w:r>' % (rpr, PURPLE, BLANK))
+        if piece:
+            new.append('<w:r><w:rPr>%s</w:rPr><w:t xml:space="preserve">%s</w:t></w:r>' % (rpr, esc(piece)))
+    return par[:start] + ''.join(new) + par[end:]
 h = h.replace(paras[1], set_text(paras[1], HEADER_TITLE))
 h = h.replace(paras[2], set_text(paras[2], APP_AUD))
 # brand word in the header line 1 becomes the purple blank placeholder
